@@ -81,7 +81,7 @@ def TransPattern(arr,duration):       #arr is a m x m numpy array
 	# change the diagonal element to np.nan
 	np.fill_diagonal(lossIntenMatr,np.nan)
 	# four returns
-	return average_gain,gainIntenMatr,average_loss,lossIntenMatr
+	return gainIntenMatr,lossIntenMatr
 
 # merge the gain and loss pattern array
 def mergeGainLoss(gainArr,lossArr):
@@ -101,21 +101,23 @@ def mergeInterval(*args):
 # calculate kappa index between land change pattern array
 # the array should not contain none values
 def kappa(A_arr,B_arr):
-	np.ravel(A_arr)
-	np.ravel(B_arr)
-	return cohen_kappa_score(np.ravel(A_arr), np.ravel(B_arr))
+	A = np.ravel(A_arr)[~np.isnan(np.ravel(A_arr))]
+	B = np.ravel(B_arr)[~np.isnan(np.ravel(B_arr))]
+	return cohen_kappa_score(np.ravel(A), np.ravel(B))
 
 
 
 
 if __name__ == '__main__':
-	map_a = np.array([[3,2,1],[1,2,2],[2,2,1],[1,2,2],[2,2,1]])
-	map_b = np.array([[3,2,1],[1,2,3],[3,2,1],[1,3,3],[3,3,1]])
-	transMatrx = transMatrix(map_a,map_b,3)[1]
-	ptn1 = TransPattern(transMatrx,2)
-	ptn2 = TransPattern(transMatrx,3)
-	print(ptn1[1])
-	print('_______________')
-	print(ptn2[1])
-
-	print(kappa(ptn1[1],ptn2[1]))
+	map_a = np.random.randint(0,7,(50,50))
+	map_b = np.random.randint(0,7,(50,50))
+	map_c = np.random.randint(0,7,(50,50))
+	TM_ab = transMatrix(map_a,map_b,6)[1]
+	TM_bc = transMatrix(map_b,map_c,6)[1]
+	gainIntenPtn_ab,lossIntenPtn_ab = TransPattern(TM_ab,5)
+	gainIntenPtn_bc,lossIntenPtn_bc = TransPattern(TM_bc,5)
+	GainLossPtn_ab = mergeGainLoss(gainIntenPtn_ab,lossIntenPtn_ab)
+	GainLossPtn_bc = mergeGainLoss(gainIntenPtn_bc,lossIntenPtn_bc)
+	finnalPtn = mergeInterval(GainLossPtn_ab,GainLossPtn_bc)
+	print(finnalPtn)
+	print(kappa(finnalPtn,finnalPtn))
