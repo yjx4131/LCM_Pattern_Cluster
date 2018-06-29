@@ -58,6 +58,7 @@ def TransPattern(arr,duration):       #arr is a m x m numpy array
 	# convert gain intensity to gain pattern with "1" indicat tending to convert and "2" indicate avoiding
 	gainIntenMatr[gainIntenMatr >= average_gain] = 1		# tend to
 	gainIntenMatr[gainIntenMatr < average_gain] = 2			# avoid
+	gainIntenMatr[np.isnan(gainIntenMatr)] = 3				# land use class inexistence 
 	# change the diagonal element to np.nan
 	np.fill_diagonal(gainIntenMatr,np.nan)
 	
@@ -78,6 +79,7 @@ def TransPattern(arr,duration):       #arr is a m x m numpy array
 	# convert loss intensity to loss pattern with "1" indicat tending to convert and "2" indicate avoiding
 	lossIntenMatr[lossIntenMatr >= np.array(average_loss).T] = 1    # tend to
 	lossIntenMatr[lossIntenMatr < np.array(average_loss).T] = 2		# avoid
+	lossIntenMatr[np.isnan(lossIntenMatr)] = 3
 	# change the diagonal element to np.nan
 	np.fill_diagonal(lossIntenMatr,np.nan)
 	# four returns

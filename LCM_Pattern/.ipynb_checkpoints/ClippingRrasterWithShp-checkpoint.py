@@ -56,6 +56,6 @@ if __name__ == '__main__':
 	gpdFc2015 = getLuccArr(lucc1996,clipFc)
 
 	
-#get the cliped lucc array with syntax: 		gpdFc.TransMtx[i][0]
+#get the cliped array with sytax: 		gpdFc.TransMtx[i][0]
 
 
