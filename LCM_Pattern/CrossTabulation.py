@@ -50,7 +50,7 @@ def TransPattern(arr,duration):       #arr is a m x m numpy array
 		average_gain_i = (grossGain_i/duration)/totalArea_start_not_i
 		average_gain.append(average_gain_i)
 	# calculate gian intensity of class i from j, then put the reslut in a numpy array
-	gainIntenMatr = np.zeros((m,m))
+	gainIntenMatr = np.ones((m,m))*3
 	for i in range(m):
 		for j in range(m):
 			gainIntensity_ji = (arr[j][i]/duration)/np.sum(arr[j,:])
@@ -60,7 +60,7 @@ def TransPattern(arr,duration):       #arr is a m x m numpy array
 	gainIntenMatr[gainIntenMatr < average_gain] = 2			# avoid
 	gainIntenMatr[np.isnan(gainIntenMatr)] = 3				# land use class inexistence 
 	# change the diagonal element to np.nan
-	np.fill_diagonal(gainIntenMatr,np.nan)
+	np.fill_diagonal(gainIntenMatr,0)
 	
 	# calculate average loss intensity for each lucc class, then put the reslut in a list
 	average_loss = []
@@ -71,7 +71,7 @@ def TransPattern(arr,duration):       #arr is a m x m numpy array
 		average_loss_i = (grossLoss_i/duration)/totalArea_end_not_i
 		average_loss.append(average_loss_i)
 	# calculate loss intensity of class i to j, then put the reslut in a numpy array
-	lossIntenMatr = np.zeros((m,m))
+	lossIntenMatr = np.ones((m,m))*3
 	for i in range(m):
 		for j in range(m):
 			lossIntensity_ij = (arr[i][j]/duration)/np.sum(arr[:,j])
@@ -81,9 +81,12 @@ def TransPattern(arr,duration):       #arr is a m x m numpy array
 	lossIntenMatr[lossIntenMatr < np.array(average_loss).T] = 2		# avoid
 	lossIntenMatr[np.isnan(lossIntenMatr)] = 3
 	# change the diagonal element to np.nan
-	np.fill_diagonal(lossIntenMatr,np.nan)
+	np.fill_diagonal(lossIntenMatr,0)
 	# four returns
-	return gainIntenMatr,lossIntenMatr
+	return gainIntenMatr.astype(np.int8),lossIntenMatr.astype(np.int8)
+
+
+
 
 # merge the gain and loss pattern array
 def mergeGainLoss(gainArr,lossArr):
@@ -103,9 +106,9 @@ def mergeInterval(*args):
 # calculate kappa index between land change pattern array
 # the array should not contain none values
 def kappa(A_arr,B_arr):
-	A = np.ravel(A_arr)[~np.isnan(np.ravel(A_arr))]
-	B = np.ravel(B_arr)[~np.isnan(np.ravel(B_arr))]
-	return cohen_kappa_score(np.ravel(A), np.ravel(B))
+	A = np.ravel(A_arr)
+	B = np.ravel(B_arr)
+	return cohen_kappa_score(A, B)
 
 
 

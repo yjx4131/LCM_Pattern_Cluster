@@ -45,3 +45,16 @@ for i in range(shapeLength):
 
 gpdFc['TransPtn'] = ptnLst
 #get the transition pattern array with syntax: 		np.array(gpdFc.TransPtn[0])
+
+disArray = np.zeros((shapeLength,shapeLength))
+for i in range(shapeLength):
+	dis2i = gpdFc.distance(gpdFc.loc[i].geometry)
+	disArray[:,i] = dis2i
+maxDistance = max(disArray)
+
+kpArray = np.zeros((shapeLength,shapeLength))
+for i in range(shapeLength):
+	for j in range(shapeLength):
+		kp_ij = ct.kappa(np.array(gpdFc.loc[i].TransPtn),np.array(gpdFc.loc[j].TransPtn))
+		kpArray[i,j] = kp_ij
+maKp = max(kpArray)
