@@ -43,18 +43,24 @@ for i in range(shapeLength):
 	Ptn = ct.mergeInterval(GainLossPtn_9605,GainLossPtn_0510,GainLossPtn_1015)
 	ptnLst.append(list(np.array(Ptn)))
 
-gpdFc['TransPtn'] = ptnLst
-#get the transition pattern array with syntax: 		np.array(gpdFc.TransPtn[0])
+gpdFc['TransPtn'] = ptnLst    #get the transition pattern array with syntax: 		np.array(gpdFc.TransPtn[0])
 
+
+
+# calculate pairwise distance of each zone
 disArray = np.zeros((shapeLength,shapeLength))
 for i in range(shapeLength):
 	dis2i = gpdFc.distance(gpdFc.loc[i].geometry)
 	disArray[:,i] = dis2i
-maxDistance = max(disArray)
+pDdisArray = pd.DataFrame(disArray)
+pDdisArray.to_csv(r'C:\Users\jyang71\Desktop\LCM_Pattern_Cluster\distance.csv')
 
+
+# calculate pairwise land change pattern similarity of each zone
 kpArray = np.zeros((shapeLength,shapeLength))
 for i in range(shapeLength):
 	for j in range(shapeLength):
 		kp_ij = ct.kappa(np.array(gpdFc.loc[i].TransPtn),np.array(gpdFc.loc[j].TransPtn))
 		kpArray[i,j] = kp_ij
-maKp = max(kpArray)
+pdKpArray = pd.DataFrame(kpArray)
+pdKpArray.to_csv(r'C:\Users\jyang71\Desktop\LCM_Pattern_Cluster\kappa.csv')

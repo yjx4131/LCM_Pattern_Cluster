@@ -1,6 +1,5 @@
-import geopandas as gpd
-import numpy as np 
-import CrossTabulation as ct
+import numpy as np
+import pandas as pd 
 
 
 disArray = pd.read_csv(r'C:\Users\jyang71\Desktop\LCM_Pattern_Cluster\distance.csv')
